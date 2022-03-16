@@ -1,5 +1,7 @@
 import numpy 
 import matplotlib.pyplot as plt
+import gurobipy as gp
+from gurobipy import GRB
 
 class Coordinate:
     def __init__(self, x, y):
@@ -34,7 +36,6 @@ if __name__ == '__main__':
     ax1.plot([coordenadas[0].x, coordenadas[-1].x], [coordenadas[0].y, coordenadas[-1].y], 'b')
     for c in coordenadas:
         ax1.plot(c.x, c.y, 'ro')
-
 
     #Iniciamos el Simulated annealing
     costo0 = Coordinate.getTotalDistance(coordenadas)
@@ -74,6 +75,7 @@ if __name__ == '__main__':
         ax2.plot(c.x, c.y, 'ro')
 
     plt.show()
+
 
 
 
