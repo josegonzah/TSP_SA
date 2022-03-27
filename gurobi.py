@@ -17,16 +17,15 @@ plt.scatter(X,Y, color='blue')
 for n in range(len(X)):
     plt.annotate(str(n), xy=(X[n], Y[n]), xytext=(X[n]+0.5, Y[n]+1), color='red')
 
-    plt.xlabel("Distancia X")
-    plt.ylabel("Distancia Y")
-    plt.title("Distancia Travel Salesman Problem")
-
-    # plt.show()
+plt.xlabel("Distancia X")
+plt.ylabel("Distancia Y")
+plt.title("Distancia Travel Salesman Problem")
+plt.show()
 
 model = Model('TSP')
 
 x = model.addVars(arcos, vtype = GRB.BINARY, name='x')
-u = model.addVars(arcos, vtype = GRB.CONTINUOUS, name='u')
+u = model.addVars(nodos, vtype = GRB.CONTINUOUS, name='u')
 
 model.setObjective(quicksum(distance[n]*x[n] for n in arcos), GRB.MINIMIZE)
 
@@ -34,4 +33,16 @@ model.addConstrs(quicksum(x[i,j] for j in nodos if j!=i)==1 for i in nodos)
 model.addConstrs(quicksum(x[i,j] for i in nodos if j!=i)==1 for j in nodos)
 
 model.addConstrs((x[i, j]==1) >> (u[i]+1==u[j]) for i,j in arcos if j!=0)
+# model.Params.timeLimit = 60
+# model.Params.MIPGap = 0.1
 model.optimize()
+
+print("Funcion Objetivo: ", str(round(model.ObjVal,2)))
+for v in model.getVars():
+    if v.x > 0.9:
+        print(str(v.VarName)+"="+str(v.x))
+
+arcos_activos = [i for i in arcos if x[i].x > 0.9]
+print(arcos_activos)
+
+
