@@ -23,7 +23,7 @@ class Coordinate:
 if __name__ == '__main__':
     # Llenar las coordenadas de manera aleatoria
     coordenadas =[]
-    numeroPuntos = 10
+    numeroPuntos = 21
     for i in range(numeroPuntos):
         coordenadas.append(Coordinate(numpy.random.uniform(), numpy.random.uniform()))
     
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     factor = 0.99
     T_init = T
     for i in range(1000):
-        print(i, 'cost = ', costo0)
+        # print(i, 'cost = ', costo0)
 
         T = T*factor
         for j in range(500):
