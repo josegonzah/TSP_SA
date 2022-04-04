@@ -1,7 +1,6 @@
 import numpy 
 import matplotlib.pyplot as plt
-import gurobipy as gp
-from gurobipy import GRB
+import time
 
 class Coordinate:
     def __init__(self, x, y):
@@ -23,14 +22,16 @@ class Coordinate:
 if __name__ == '__main__':
     # Llenar las coordenadas de manera aleatoria
     coordenadas =[]
-    numeroPuntos = 21
+    numeroPuntos = 50
+    tempGraph = []
     for i in range(numeroPuntos):
         coordenadas.append(Coordinate(numpy.random.uniform(), numpy.random.uniform()))
     
     #Plot
     figure = plt.figure(figsize = (10, 5))
-    ax1 = figure.add_subplot(121)
-    ax2 = figure.add_subplot(122)
+    ax1 = figure.add_subplot(221)
+    ax2 = figure.add_subplot(222)
+    ax3 = figure.add_subplot(223)
     for first, second in zip(coordenadas[:-1], coordenadas[1:]):
         ax1.plot([first.x, second.x], [first.y, second.y])
     ax1.plot([coordenadas[0].x, coordenadas[-1].x], [coordenadas[0].y, coordenadas[-1].y], 'b')
@@ -40,14 +41,15 @@ if __name__ == '__main__':
     #Iniciamos el Simulated annealing
     costo0 = Coordinate.getTotalDistance(coordenadas)
 
-    T = 30
+    startTime = time.time()
+    T = 15
     factor = 0.99
     T_init = T
     for i in range(1000):
-        # print(i, 'cost = ', costo0)
 
         T = T*factor
-        for j in range(500):
+        tempGraph.append(T)
+        for j in range(80):
             #Intercambio de 2 coordenadas aleatorias para obtener un vecino que posibilite la solucion
             r1, r2 = numpy.random.randint(0, len(coordenadas), size=2)
 
@@ -67,13 +69,18 @@ if __name__ == '__main__':
                     temp = coordenadas[r1]
                     coordenadas[r1] = coordenadas[r2]
                     coordenadas[r2] = temp
+
+    print("Costo funcion objetivo", costo1)
+    print("Tiempo de ejecucion", time.time()-startTime)
     #Ploteamos el resultado
+
+    iteration = range(len(tempGraph))
     for first, second in zip(coordenadas[:-1], coordenadas[1:]):
         ax2.plot([first.x, second.x], [first.y, second.y])
     ax2.plot([coordenadas[0].x, coordenadas[-1].x], [coordenadas[0].y, coordenadas[-1].y], 'b')
     for c in coordenadas:
         ax2.plot(c.x, c.y, 'ro')
-
+    ax3.plot(iteration, tempGraph)
     plt.show()
 
 
